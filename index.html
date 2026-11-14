@@ -2,187 +2,107 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DKM AL IKHSAN - Masjid Al Makmur</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kas Masjid Al Ikhsan</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:#0f0f0f;color:#fff;padding-bottom:90px}
-.top{padding:20px}
-.top small{color:#ff8c00;letter-spacing:1px;font-size:12px}
-.top h1{font-size:24px;margin:2px 0}
-.top .saldo{font-size:36px;font-weight:800;margin:8px 0 2px}
-.top p{font-size:12px;color:#aaa}
-.card{background:#1c1c1c;margin:12px;border-radius:18px;padding:16px}
-.row{display:flex;gap:10px}
-.btn2{flex:1;padding:13px;border:none;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer}
-.btnMasuk{background:#22c55e;color:#fff}
-.btnKeluar{background:#ef4444;color:#fff}
-.stat{flex:1;background:#2a2a2a;border-radius:14px;padding:12px;text-align:center}
-.stat span{font-size:12px;color:#aaa}
-.stat b{display:block;font-size:17px;margin-top:4px}
-.stat.masuk b{color:#22c55e}
-.stat.keluar b{color:#ef4444}
-.chart{display:flex;align-items:flex-end;gap:10px;height:90px;margin-top:14px}
-.bar{flex:1;text-align:center}
-.bar .val{font-size:11px;color:#ffb020;margin-bottom:4px}
-.bar .fill{background:#ff7a00;border-radius:8px 8px 0 0;width:100%}
-.bar .day{font-size:11px;color:#aaa;margin-top:6px}
-.head{display:flex;justify-content:space-between;align-items:center}
-.head span{font-size:12px;color:#aaa}
-.item{display:flex;gap:12px;background:#2a2a2a;border-radius:14px;padding:12px;margin-top:12px;align-items:center}
-.icon{width:44px;height:44px;border-radius:50%;background:#14341f;color:#22c55e;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.icon.out{background:#3a1a1a;color:#ef4444}
-.item b{font-size:15px}
-.item small{color:#aaa;font-size:12px;display:block;margin-top:2px}
-.item .del{color:#ef4444;font-size:12px;cursor:pointer}
-.plus{color:#22c55e;font-weight:800;margin-left:auto;white-space:nowrap}
-.min{color:#ef4444;font-weight:800;margin-left:auto;white-space:nowrap}
-.empty{text-align:center;color:#888;padding:20px;font-size:13px}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#1c1c1c;display:flex;padding:10px 0;border-top:1px solid #333}
-.nav button{flex:1;background:none;border:none;color:#888;font-size:12px;cursor:pointer}
-.nav button.active{color:#ff7a00}
-.nav .big{font-size:20px}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;align-items:flex-end;justify-content:center}
-.modal.show{display:flex}
-.sheet{background:#1c1c1c;width:100%;max-width:480px;border-radius:22px 22px 0 0;padding:20px;padding-bottom:30px}
-.sheet label{font-size:12px;color:#aaa;display:block;margin:12px 0 6px}
-.sheet input{width:100%;padding:13px;border-radius:12px;border:1px solid #333;background:#111;color:#fff;font-size:15px;outline:none}
-.radio{display:flex;gap:8px}
-.radio button{flex:1;padding:11px;border-radius:10px;border:1px solid #333;background:#111;color:#fff;cursor:pointer;font-weight:700}
-.radio button.on{background:#ff7a00;border-color:#ff7a00;color:#fff}
-.sheet .save{width:100%;padding:14px;border:none;border-radius:12px;background:#ff7a00;color:#fff;font-weight:800;font-size:15px;margin-top:16px}
-.sheet .batal{width:100%;padding:13px;border:none;border-radius:12px;background:#2a2a2a;color:#fff;margin-top:8px}
-.cat{display:flex;gap:8px;flex-wrap:wrap}
-.cat button{padding:9px 12px;border-radius:20px;border:1px solid #333;background:#111;color:#fff;font-size:12px}
-.cat button.on{background:#fff;color:#000;font-weight:700}
-.qrisBox{text-align:center}
-.qrisBox img{width:180px;height:180px;background:#fff;border-radius:14px;padding:10px;margin:12px 0}
-.waBtn{width:100%;padding:14px;border:none;border-radius:12px;background:#25D366;color:#fff;font-weight:800;font-size:15px;margin-top:12px;cursor:pointer}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#0f172a;color:#fff;padding:14px;padding-bottom:90px}
+.top{background:linear-gradient(135deg,#16a34a,#0ea5e9);border-radius:16px;padding:16px}
+.top h2{margin:0;font-size:18px}
+.saldo{font-size:32px;font-weight:900;margin:6px 0}
+.row{display:flex;gap:10px;margin:12px 0}
+.btn{flex:1;border:0;border-radius:12px;padding:13px;font-weight:800;color:#fff;font-size:15px}
+.hijau{background:#16a34a}
+.merah{background:#dc2626}
+.card{background:#1e293b;border-radius:14px;padding:14px;margin:12px 0}
+.card h3{margin:0 0 10px;font-size:15px}
+.flex{display:flex;gap:10px}
+.box{flex:1;background:#0f172a;border-radius:10px;padding:10px;text-align:center}
+.box b{font-size:15px}
+.wa{width:100%;background:#16a34a;border:0;color:#fff;padding:14px;border-radius:12px;font-weight:800;font-size:15px}
+.qris{text-align:center}
+.qris img{width:170px;background:#fff;padding:8px;border-radius:10px}
+.item{display:flex;justify-content:space-between;background:#0f172a;padding:10px;border-radius:10px;margin-bottom:8px}
+.icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.masuk{background:#14532d}
+.keluar{background:#7f1d1d}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.sheet{background:#1e293b;width:100%;max-width:480px;border-radius:18px 18px 0 0;padding:16px}
+.sheet input{width:100%;padding:12px;border-radius:10px;border:0;margin:6px 0;background:#0f172a;color:#fff}
+.kat button{background:#334155;color:#fff;border:0;padding:8px 10px;border-radius:20px;margin:3px}
+.kat button.on{background:#16a34a}
+.bayar button{flex:1;padding:11px;border:0;border-radius:10px;background:#334155;color:#fff;font-weight:700}
+.bayar button.on{background:#16a34a}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#1e293b;display:flex;justify-content:space-around;padding:10px}
+.nav button{background:none;border:0;color:#fff;font-size:13px}
+.nav b{color:#4ade80;font-size:20px}
 </style>
 </head>
 <body>
 <div class="top">
-<small>MASJID AL MAKMUR</small>
-<h1>DKM AL IKHSAN</h1>
+<h2>🕌 DKM AL IKHSAN</h2>
+<div>Saldo Kas Masjid</div>
 <div class="saldo" id="saldo">Rp 0</div>
-<p>Saldo Kas Masjid Al Makmur • Cengkudu</p>
+<div id="jml">0 transaksi</div>
 </div>
-<div style="margin:0 12px;display:flex;gap:10px">
-<button class="btn2 btnMasuk" onclick="bukaForm('masuk')">+ Pemasukan</button>
-<button class="btn2 btnKeluar" onclick="bukaForm('keluar')">- Pengeluaran</button>
-</div>
-<div class="card">
 <div class="row">
-<div class="stat masuk"><span>Total Masuk</span><b id="totalMasuk">Rp 0</b></div>
-<div class="stat keluar"><span>Total Keluar</span><b id="totalKeluar">Rp 0</b></div>
-</div>
-<div style="margin-top:14px;display:flex;justify-content:space-between"><b>Infaq Minggu Ini</b><span style="color:#aaa;font-size:12px">7 hari terakhir</span></div>
-<div class="chart" id="chart"></div>
-<button class="waBtn" onclick="kirimWA()">📲 Rekap & Kirim ke WA Grup DKM</button>
-</div>
-<div class="card qrisBox">
-<b>🕌 QRIS Masjid Al Makmur</b>
-<p style="color:#aaa;font-size:12px;margin-top:4px">Jamaah scan untuk Infaq / Donasi</p>
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=DKM-AL-IKHSAN-MASJID-AL-MAKMUR-CENGKUDU" alt="QRIS Masjid">
-<p style="font-size:12px;color:#ffb020">DKM AL IKHSAN • MASJID AL MAKMUR</p>
-<p style="font-size:11px;color:#888;margin-top:4px">* Nanti ganti QR ini dengan QRIS asli masjid ya, Broo</p>
+<button class="btn hijau" onclick="bukaForm('masuk')">+ Pemasukan</button>
+<button class="btn merah" onclick="bukaForm('keluar')">- Pengeluaran</button>
 </div>
 <div class="card">
-<div class="head"><b>Transaksi Terbaru</b><span id="jml">0 transaksi</span></div>
-<div id="list"></div>
+<h3>💰 Ringkasan</h3>
+<div class="flex">
+<div class="box">Total Masuk<br><b id="totalMasuk">Rp 0</b></div>
+<div class="box">Total Keluar<br><b id="totalKeluar">Rp 0</b></div>
 </div>
-<div class="nav">
-<button class="active">📊<br>Dashboard</button>
-<button onclick="bukaForm('masuk')">💚<br>Infaq</button>
-<button onclick="bukaForm('masuk')"><span class="big">⊞</span><br>+ Input</button>
-<button onclick="bukaForm('keluar')">💸<br>Keluar</button>
+</div>
+<div class="card">
+<h3>📊 Infaq Minggu Ini</h3>
+<div id="chart"></div>
+<div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8"><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span></div>
+</div>
+<div class="card">
+<button class="wa" onclick="kirimWA()">📲 Rekap & Kirim ke WA Grup DKM</button>
+</div>
+<div class="card qris">
+<h3>QRIS Masjid</h3>
+<p>QRIS Masjid Al Makmur</p>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=DKM-AL-IKHSAN">
+<p style="font-size:12px;color:#94a3b8">Scan pakai DANA / OVO / GoPay / m-Banking</p>
+</div>
+<div class="card">
+<h3>🧾 Transaksi Terbaru</h3>
+<div id="list">Belum ada transaksi</div>
 </div>
 <div class="modal" id="modal">
 <div class="sheet">
-<h3 id="formJudul">Tambah Pemasukan</h3>
-<label>Jenis Transaksi</label>
-<div class="radio" id="jenisBox">
-<button type="button" class="on" id="btnMasuk" onclick="gantiJenis('masuk')">+ Pemasukan</button>
-<button type="button" id="btnKeluar" onclick="gantiJenis('keluar')">- Pengeluaran</button>
+<h3 id="judulForm">Tambah Transaksi</h3>
+<div class="flex bayar" id="bayarBox">
+<button onclick="pilihBayar(this,'QRIS')">QRIS</button>
+<button onclick="pilihBayar(this,'Tunai')">Tunai</button>
+<button onclick="pilihBayar(this,'Transfer')">Transfer</button>
 </div>
-<label>Nama / Hamba Allah</label>
-<input type="text" id="nama" value="Hamba Allah" placeholder="Hamba Allah">
-<label>Kategori</label>
-<div class="cat" id="catBox"></div>
-<label>Mode Pembayaran</label>
-<div class="radio" id="bayarBox">
-<button type="button" class="on" onclick="pilihBayar(this,'QRIS')">QRIS</button>
-<button type="button" onclick="pilihBayar(this,'Tunai')">Tunai</button>
-<button type="button" onclick="pilihBayar(this,'Transfer')">Transfer</button>
+<input id="nama" placeholder="Keterangan, cth: Infaq Jumat">
+<input id="nominal" type="number" placeholder="Nominal Rp">
+<div class="kat" id="catBox"></div>
+<div class="flex">
+<button class="btn" style="background:#334155" onclick="tutupForm()">Batal</button>
+<button class="btn hijau" onclick="simpan()">Simpan Transaksi</button>
 </div>
-<label>Nominal</label>
-<input type="number" id="nominal" placeholder="Contoh: 700000">
-<button class="save" onclick="simpan()">Simpan Transaksi</button>
-<button class="batal" onclick="tutupForm()">Batal</button>
 </div>
+</div>
+<div class="nav">
+<button onclick="window.scrollTo(0,0)">🏠<br>Beranda</button>
+<button onclick="bukaForm('masuk')"><b>+</b><br>Input</button>
+<button onclick="kirimWA()">📲<br>WA</button>
 </div>
 <script>
-let data = JSON.parse(localStorage.getItem('kas_alikhsan_v2') || '[]');
+let data=JSON.parse(localStorage.getItem('kas_alikhsan_v2')||'[]');
 let jenisAktif='masuk';
 let bayarAktif='QRIS';
 let katAktif='Infaq Jumat';
-let katMasuk=['Infaq Jumat','Kotak Amal','Donasi','Infaq Harian'];
-let katKeluar=['Listrik','Air / PDAM','Kebersihan','Perbaikan Masjid','Lainnya'];
+let katMasuk=['Infaq Jumat','Kotak Amal','Donasi','Zakat','Lainnya'];
+let katKeluar=['Listrik','Air / PDAM','Kebersihan','Perbaikan','Lainnya'];
 function rupiah(n){return 'Rp '+n.toLocaleString('id-ID')}
-function pilihBayar(el,v){bayarAktif=v;document.querySelectorAll('#bayarBox button').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
-function gantiJenis(j){jenisAktif=j;document.getElementById('btnMasuk').classList.toggle('on',j==='masuk');document.getElementById('btnKeluar').classList.toggle('on',j==='keluar');document.getElementById('formJudul').innerText=j==='masuk'?'Tambah Pemasukan':'Tambah Pengeluaran';renderKat();}
-function renderKat(){
-let list = jenisAktif==='masuk'?katMasuk:katKeluar;
-katAktif=list[0];
-document.getElementById('catBox').innerHTML=list.map(k=>`<button type="button" onclick="pilihKat(this,'${k}')">${k}</button>`).join('');
-document.querySelector('#catBox button').classList.add('on');
-}
-function pilihKat(el,v){katAktif=v;document.querySelectorAll('#catBox button').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
-function tampil(){
-let masuk=0,keluar=0;
-let hari=['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
-data.forEach(d=>{if(d.jenis==='masuk'){masuk+=d.nominal} else {keluar+=d.nominal}});
-document.getElementById('totalMasuk').innerText=rupiah(masuk);
-document.getElementById('totalKeluar').innerText=rupiah(keluar);
-document.getElementById('saldo').innerText=rupiah(masuk-keluar);
-document.getElementById('jml').innerText=data.length+' transaksi';
-let chartData = data.length? [0,0,0,0,0,0,0] : [120000,150000,90000,210000,700000,800
-let chartData = data.length? [0,0,0,0,0,0,0] : [120000,150000,90000,210000,700000,80000,0];
-let max = Math.max(...chartData,1);
-document.getElementById('chart').innerHTML=chartData.map((v,i)=>{
-let h = Math.max(12, (v/max)*70);
-let label = v>=1000 ? Math.round(v/1000)+'k' : v;
-return `<div class="bar"><div class="val">${label}</div><div class="fill" style="height:${h}px"></div><div class="day">${hari[i]}</div></div>`
-}).join('');
-let html='';
-data.slice().reverse().forEach((d,i)=>{
-let idx=data.length-1-i;
-let isMasuk=d.jenis==='masuk';
-html+=`<div class="item"><div class="icon ${isMasuk?'':'out'}">${isMasuk?'↓':'↑'}</div><div><b>${d.nama||'Hamba Allah'}</b><small>${d.kat} • ${d.bayar} • ${d.tgl} • Terverifikasi</small><span class="del" onclick="hapus(${idx})">Hapus</span></div><div class="${isMasuk?'plus':'min'}">${isMasuk?'+':'-'} ${rupiah(d.nominal)}</div></div>`;
-});
-document.getElementById('list').innerHTML=html||'<div class="empty">Belum ada transaksi.<br>Klik + Input untuk mulai.</div>';
-localStorage.setItem('kas_alikhsan_v2',JSON.stringify(data));
-}
-function bukaForm(j){gantiJenis(j);document.getElementById('modal').classList.add('show')}
-function tutupForm(){document.getElementById('modal').classList.remove('show')}
-function simpan(){
-let nama=document.getElementById('nama').value||'Hamba Allah';
-let nominal=parseInt(document.getElementById('nominal').value);
-if(!nominal){alert('Isi nominal dulu, Broo!');return}
-data.push({nama:nama,kat:katAktif,bayar:bayarAktif,nominal:nominal,jenis:jenisAktif,tgl:'Hari ini, '+new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})});
-document.getElementById('nominal').value='';
-tutupForm();tampil();
-}
-function hapus(i){if(confirm('Hapus transaksi ini?')){data.splice(i,1);tampil()}}
-function kirimWA(){
-let masuk=0,keluar=0;
-data.forEach(d=>{if(d.jenis==='masuk') masuk+=d.nominal; else keluar+=d.nominal});
-let teks=`*LAPORAN KAS MASJID AL MAKMUR*%0A*DKM AL IKHSAN - CENGKUDU*%0A%0ATotal Masuk: ${rupiah(masuk)}%0ATotal Keluar: ${rupiah(keluar)}%0ASaldo: ${rupiah(masuk-keluar)}%0A%0A*Transaksi Terbaru:*%0A`;
-data.slice().reverse().slice(0,10).forEach(d=>{teks+=`- ${d.nama} | ${d.kat} | ${d.bayar} | ${d.jenis==='masuk'?'+':'-'}${rupiah(d.nominal)}%0A`});
-teks+=`%0ADibuat dari Aplikasi Kas DKM AL IKHSAN`;
-window.open('https://wa.me/?text='+teks,'_blank');
-}
-renderKat();tampil();
-</script>
-</body>
-</html>
+function pilihBayar(el,v){bayarAktif=v;document.querySelectorAll('#bayarBox button').forEach(b=>
