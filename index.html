@@ -26,4 +26,79 @@ body{background:#f1f5f9;padding-bottom:100px}
 .list h3{margin-bottom:10px}
 .item{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eee}
 .item:last-child{border:none}
-.item small{color
+.item small{color:#888;display:block;font-size:12px}
+.item b{font-size:15px}
+.plus{color:#16a34a}
+.min{color:#dc2626}
+.del{border:none;background:none;color:#999;font-size:18px;margin-left:8px}
+.empty{text-align:center;color:#999;padding:20px;font-size:14px}
+.form{display:none;background:#fff;margin:14px;border-radius:14px;padding:16px}
+.form input,.form select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:15px}
+.form button{width:100%;padding:13px;border:none;border-radius:10px;background:#f97316;color:#fff;font-weight:700;font-size:15px;margin-top:8px}
+.batal{background:#e2e8f0!important;color:#333!important}
+</style>
+</head>
+<body>
+<div class="top">
+<small>MASJID AL-IKHSAN</small>
+<h1>DKM Al-Ikhsan</h1>
+<div class="saldo" id="saldo">Rp 0</div>
+<p>Saldo Kas Masjid • Cengkudu</p>
+</div>
+<div class="card row">
+<div class="stat masuk"><span>Total Masuk</span><b id="totalMasuk">Rp 0</b></div>
+<div class="stat keluar"><span>Total Keluar</span><b id="totalKeluar">Rp 0</b></div>
+</div>
+<div class="btns">
+<button class="btn masuk" onclick="bukaForm('masuk')">+ Pemasukan</button>
+<button class="btn keluar" onclick="bukaForm('keluar')">- Pengeluaran</button>
+</div>
+<div class="form" id="formBox">
+<h3 id="formJudul">Tambah Transaksi</h3>
+<input type="text" id="ket" placeholder="Keterangan, contoh: Infaq Jumat">
+<input type="number" id="nominal" placeholder="Nominal, contoh: 500000">
+<button onclick="simpan()">Simpan</button>
+<button class="batal" onclick="tutupForm()">Batal</button>
+</div>
+<div class="card list">
+<h3>Riwayat Transaksi</h3>
+<div id="list"></div>
+</div>
+<script>
+let data = JSON.parse(localStorage.getItem('kas_alikhsan') || '[]');
+let jenisAktif = 'masuk';
+function rupiah(n){return 'Rp ' + n.toLocaleString('id-ID')}
+function tampil(){
+let masuk=0, keluar=0, html='';
+data.slice().reverse().forEach((d,i)=>{
+let idx = data.length-1-i;
+if(d.jenis==='masuk') masuk+=d.nominal; else keluar+=d.nominal;
+html+=`<div class="item"><div><b>${d.ket}</b><small>${d.tgl}</small></div><div><b class="${d.jenis==='masuk'?'plus':'min'}">${d.jenis==='masuk'?'+':'-'} ${rupiah(d.nominal)}</b><button class="del" onclick="hapus(${idx})">×</button></div></div>`;
+});
+document.getElementById('list').innerHTML = html || '<div class="empty">Belum ada transaksi.<br>Klik + Pemasukan untuk mulai.</div>';
+document.getElementById('totalMasuk').innerText = rupiah(masuk);
+document.getElementById('totalKeluar').innerText = rupiah(keluar);
+document.getElementById('saldo').innerText = rupiah(masuk-keluar);
+localStorage.setItem('kas_alikhsan', JSON.stringify(data));
+}
+function bukaForm(j){
+jenisAktif=j;
+document.getElementById('formBox').style.display='block';
+document.getElementById('formJudul').innerText = j==='masuk' ? 'Tambah Pemasukan' : 'Tambah Pengeluaran';
+document.getElementById('ket').focus();
+window.scrollTo(0,200);
+}
+function tutupForm(){document.getElementById('formBox').style.display='none'}
+function simpan(){
+let ket=document.getElementById('ket').value;
+let nominal=parseInt(document.getElementById('nominal').value);
+if(!ket || !nominal){alert('Isi keterangan dan nominal dulu, Broo!');return}
+data.push({ket:ket, nominal:nominal, jenis:jenisAktif, tgl:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})});
+document.getElementById('ket').value=''; document.getElementById('nominal').value='';
+tutupForm(); tampil();
+}
+function hapus(i){if(confirm('Hapus transaksi ini?')){data.splice(i,1);tampil()}}
+tampil();
+</script>
+</body>
+</html>
