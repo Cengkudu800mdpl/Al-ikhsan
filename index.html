@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DKM Al-Ikhsan - Kas Masjid</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
+body{background:#f1f5f9;padding-bottom:90px}
+.top{background:#f97316;color:#fff;padding:22px 18px 28px;border-radius:0 0 24px 24px}
+.top small{opacity:.9;letter-spacing:1px}
+.top h1{font-size:26px;margin:4px 0}
+.top .saldo{font-size:38px;font-weight:800;margin:8px 0 4px}
+.top p{font-size:13px;opacity:.9}
+.card{background:#fff;margin:14px;border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.row{display:flex;gap:10px}
+.stat{flex:1;background:#fff7ed;border-radius:12px;padding:12px;text-align:center}
+.stat b{display:block;font-size:18px}
+.stat span{font-size:12px;color:#666}
+.btns{display:flex;gap:10px;margin:14px}
+.btn{flex:1;padding:13px;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:14px}
+.btn-w{background:#fff;color:#111;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.btn-o{background:#111;color:#fff}
+.btn-d{background:#111;color:#fff}
+h3{font-size:16px;margin-bottom:10px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin-bottom:10px;font-size:14px}
+.item{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #eee;font-size:14px}
+.masuk{color:#16a34a;font-weight:700}.keluar{color:#dc2626;font-weight:700}
+.badge{font-size:11px;padding:3px 8px;border-radius:20px;background:#dcfce7}
+.del{border:none;background:none;color:#999;cursor:pointer}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;border-top:1px solid #eee;padding:8px 0;z-index:99}
+.nav button{flex:1;border:none;background:none;font-size:12px;cursor:pointer;color:#888}
+.nav button.active{color:#ea580c;font-weight:800}
+.page{display:none}.page.active{display:block}
+table{width:100%;font-size:13px;border-collapse:collapse}
+th,td{padding:8px;text-align:left;border-bottom:1px solid #eee}
+.small{font-size:12px;color:#666}
+</style>
+</head>
+<body>
+
+<div class="top">
+<small>🕌 DKM AL-IKHSAN</small>
+<h1>Saldo Kas Masjid</h1>
+<div class="saldo" id="saldoTxt">Rp 0</div>
+<p id="saldoSub">Masjid Al-Ikhsan • Terverifikasi • Bismillah Amanah</p>
+</div>
+
+<div class="btns">
+<button class="btn btn-w" onclick="exportLaporan()">📄 Export Laporan</button>
+<button class="btn btn-o" onclick="openPage('kas');document.getElementById('jenis').value='masuk'">+ Infaq</button>
+<button class="btn btn-d" onclick="openPage('kas');document.getElementById('jenis').value='keluar'">- Catat Keluar</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="p-dashboard" class="page active">
+<div class="card row">
+<div class="stat"><span>Masuk Bulan Ini</span><b id="masukBulan" style="color:#16a34a">Rp 0</b></div>
+<div class="stat"><span>Keluar Bulan Ini</span><b id="keluarBulan" style="color:#dc2626">Rp 0</b></div>
+</div>
+<div class="card"><h3>💰 Dana Terpisah</h3>
+<p class="small">Operasional: <b id="danaOp">Rp 0</b> • Pembangunan: <b id="danaBang">Rp 0</b> • Zakat: <b id="danaZakat">Rp 0</b></p>
+</div>
+<div class="card"><h3>🕋 Transaksi Terakhir</h3><div id="listDash"></div></div>
+<div class="card"><h3>📢 Pengumuman</h3><div id="listPengumuman"></div>
+<input id="pengInput" placeholder="Tulis pengumuman..."><button class="btn btn-o" onclick="tambahPengumuman()">Posting Pengumuman</button></div>
+</div>
+
+<!-- KAS -->
+<div id="p-kas" class="page">
+<div class="card"><h3>➕ Catat Transaksi Kas</h3>
+<select id="jenis"><option value="masuk">Pemasukan (Infaq)</option><option value="keluar">Pengeluaran</option></select>
+<select id="kategori"><option>Infaq Kotak Amal</option><option>Infaq Jumat</option><option>Donasi</option><option>Zakat</option><option>Honor Ustadz / Imam</option><option>Listrik & Air</option><option>Pembangunan</option><option>ATK & Kebersihan</option><option>Lainnya</option></select>
+<select id="dana"><option>Operasional</option><option>Pembangunan</option><option>Zakat</option></select>
+<input id="nominal" type="number" placeholder="Nominal Rp - contoh 50000">
+<input id="ket" placeholder="Keterangan - contoh: Kotak Amal Jumat 14 Nov">
+<button class="btn btn-o" style="width:100%" onclick="tambahKas()">Simpan ke Kas</button>
+<p class="small" style="margin-top:8px">Jejak audit: siapa input & kapan, tersimpan otomatis.</p>
+</div>
+<div class="card"><h3>📒 Buku Kas</h3><div id="listKas"></div></div>
+</div>
+
+<!-- INFAQ / KOTAK AMAL -->
+<div id="p-infaq" class="page">
+<div class="card"><h3>🤲 Kotak Amal / Keropak Jumat</h3>
+<p class="small">Hitung per pecahan + saksi, biar amanah.</p><br>
+<input id="pec100" type="number" placeholder="Lembar 100rb x ...">
+<input id="pec50" type="number" placeholder="Lembar 50rb x ...">
+<input id="pec20" type="number" placeholder="Lembar 20rb x ...">
+<input id="pec10" type="number" placeholder="Lembar 10rb x ...">
+<input id="pec5" type="number" placeholder="Lembar 5rb x ...">
+<input id="koin" type="number" placeholder="Koin / receh total Rp">
+<input id="saksi" placeholder="Saksi 1 & 2 - contoh: Pak RT & Pak Budi">
+<button class="btn btn-o" style="width:100%" onclick="hitungKeropak()">Hitung & Masukkan ke Kas</button>
+<div id="hasilKeropak" style="margin-top:10px;font-weight:700"></div>
+</div>
+<div class="card"><h3>Riwayat Kotak Amal</h3><div id="listKeropak"></div></div>
+</div>
+
+<!-- JADWAL JUMAT -->
+<div id="p-jadwal" class="page">
+<div class="card"><h3>🕌 Jadwal Petugas Jumat</h3>
+<input id="tglJumat" type="date">
+<input id="imam" placeholder="Imam">
+<input id="khatib" placeholder="Khatib">
+<input id="muadzin" placeholder="Muadzin / Bilal">
+<button class="btn btn-o" style="width:100%" onclick="tambahJadwal()">Simpan Jadwal</button>
+</div>
+<div class="card"><h3>Jadwal Terdekat</h3><div id="listJadwal"></div></div>
+</div>
+
+<!-- INVENTARIS -->
+<div id="p-inventaris" class="page">
+<div class="card"><h3>📦 Inventaris Masjid</h3>
+<input id="namaBarang" placeholder="Nama barang - Karpet, Sound, Kipas">
+<input id="jmlBarang" type="number" placeholder="Jumlah">
+<select id="kondisiBarang"><option>Baik</option><option>Rusak Ringan</option><option>Rusak Berat</option></select>
+<input id="lokBarang" placeholder="Lokasi - Ruang Utama / Gudang">
+<button class="btn btn-o" style="width:100%" onclick="tambahBarang()">Tambah Barang</button>
+</div>
+<div class="card"><div id="listBarang"></div></div>
+</div>
+
+<!-- LAPORAN -->
+<div id="p-laporan" class="page">
+<div class="card"><h3>📊 Laporan Transparansi</h3>
+<p>Saldo: <b id="lapSaldo"></b></p><p>Total Masuk: <b id="lapMasuk"></b></p><p>Total Keluar: <b id="lapKeluar"></b></p><br>
+<p class="small">Halaman ini untuk jamaah. Share link GitHub Pages ini ke grup WA, jamaah bisa cek sendiri.</p><br>
+<button class="btn btn-w" style="width:100%;border:1px solid #ddd" onclick="exportLaporan()">📄 Download Laporan (Print / PDF)</button><br><br>
+<button class="btn btn-d" style="width:100%" onclick="if(confirm('Hapus semua data?')){localStorage.clear();location.reload()}">Reset Data</button>
+</div>
+</div>
+
+<div class="nav">
+<button class="active" onclick="openPage('dashboard',this)">📊<br>Dashboard</button>
+<button onclick="openPage('kas',this)">💰<br>Kas</button>
+<button onclick="openPage('infaq',this)">🤲<br>Kotak Amal</button>
+<button onclick="openPage('jadwal',this)">🕌<br>Jumat</button>
+<button onclick="openPage('inventaris',this)">📦<br>Inventaris</button>
+<button onclick="openPage('laporan',this)">📄<br>Laporan</button>
+</div>
+
+<script>
+let kas=JSON.parse(localStorage.getItem('al_ikhsan_kas')||'[]');
+let keropak=JSON.parse(localStorage.getItem('al_ikhsan_keropak')||'[]');
+let jadwal=JSON.parse(localStorage.getItem('al_ikhsan_jadwal')||'[]');
+let barang=JSON.parse(localStorage.getItem('al_ikhsan_barang')||'[]');
+let peng=JSON.parse(localStorage.getItem('al_ikhsan_peng')||'["Selamat datang di DKM Al-Ikhsan. Laporan kas bisa dicek di menu Laporan."]');
+function rp(n){return 'Rp '+Number(n||0).toLocaleString('id-ID')}
+function save(){localStorage.setItem('al_ikhsan_kas',JSON.stringify(kas));localStorage.setItem('al_ikhsan_keropak',JSON.stringify(keropak));localStorage.setItem('al_ikhsan_jadwal',JSON.stringify(jadwal));localStorage.setItem('al_ikhsan_barang',JSON.stringify(barang));localStorage.setItem('al_ikhsan_peng',JSON.stringify(peng));render()}
+function openPage(id,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('p-'+id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));if(el)el.classList.add('active');window.scrollTo(0,0)}
+function tambahKas(){let j=document.getElementById('jenis').value;let n=Number(document.getElementById('nominal').value);if(!n)return alert('Isi nominal dulu, Jendral!');kas.unshift({jenis:j,kat:document.getElementById('kategori').value,dana:document.getElementById('dana').value,nom:n,ket:document.getElementById('ket').value||'-',tgl:new Date().toLocaleDateString('id-ID')});document.getElementById('nominal').value='';document.getElementById('ket').value='';save();alert('Jazakallah Khair, sudah masuk kas!');openPage('dashboard')}
+function hitungKeropak(){let total=(Number(document.getElementById('pec100').value||0)*100000)+(Number(document.getElementById('pec50').value||0)*50000)+(Number(document.getElementById('pec20').value||0)*20000)+(Number(document.getElementById('pec10').value||0)*10000)+(Number(document.getElementById('pec5').value||0)*5000)+Number(document.getElementById('koin').value||0);if(!total)return alert('Isi pecahan dulu');document.getElementById('hasilKeropak').innerText='Total: '+rp(total)+' • Saksi: '+(document.getElementById('saksi').value||'-');kas.unshift({jenis:'masuk',kat:'Kotak Amal Jumat',dana:'Operasional',nom:total,ket:'Keropak - Saksi: '+(document.getElementById('saksi').value||'-'),tgl:new Date().toLocaleDateString('id-ID')});keropak.unshift({total,saksi:document.getElementById('saksi').value,tgl:new Date().toLocaleDateString('id-ID')});save();alert('Keropak '+rp(total)+' masuk kas!')}
+function tambahJadwal(){let t=document.getElementById('tglJumat').value;if(!t)return alert('Pilih tanggal Jumat');jadwal.unshift({tgl:t,imam:document.getElementById('imam').value,khatib:document.getElementById('khatib').value,muadzin:document.getElementById('muadzin').value});save();alert('Jadwal disimpan')}
+function tambahBarang(){let n=document.getElementById('namaBarang').value;if(!n)return alert('Isi nama barang');barang.unshift({nama:n,jml:document.getElementById('jmlBarang').value||1,kond:document.getElementById('kondisiBarang').value,lok:document.getElementById('lokBarang').value});save()}
+function tambahPengumuman(){let v=document.getElementById('pengInput').value;if(!v)return;peng.unshift(v);document.getElementById('pengInput').value='';save()}
+function exportLaporan(){let w=window.open('');w.document.write('<h2>DKM Al-Ikhsan - Laporan Kas</h2><p>Saldo: '+rp(kas.reduce((a,b)=>a+(b.jenis=='masuk'?b.nom:-b.nom),0))+'</p>');kas.forEach(k=>{w.document.write('<p>'+k.tgl+' - '+k.kat+' - '+k.ket+' : '+(k.jenis=='masuk'?'+':'-')+rp(k.nom)+'</p>')});w.document.write('<p>Dicetak: '+new Date().toLocaleString('id-ID')+'</p>');w.print()}
+function render(){
+let saldo=kas.reduce((a,b)=>a+(b.jenis=='masuk'?b.nom:-b.nom),0);
+let masuk=kas.filter(k=>k
