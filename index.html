@@ -8,34 +8,26 @@
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial;background:#0f172a;color:#fff;padding:14px;padding-bottom:90px}
 .top{background:linear-gradient(135deg,#16a34a,#0ea5e9);border-radius:16px;padding:16px}
-.top h2{margin:0;font-size:18px}
-.saldo{font-size:32px;font-weight:900;margin:6px 0}
+.saldo{font-size:32px;font-weight:900}
 .row{display:flex;gap:10px;margin:12px 0}
-.btn{flex:1;border:0;border-radius:12px;padding:13px;font-weight:800;color:#fff;font-size:15px}
+.btn{flex:1;border:0;border-radius:12px;padding:13px;font-weight:800;color:#fff}
 .hijau{background:#16a34a}
 .merah{background:#dc2626}
 .card{background:#1e293b;border-radius:14px;padding:14px;margin:12px 0}
-.card h3{margin:0 0 10px;font-size:15px}
 .flex{display:flex;gap:10px}
 .box{flex:1;background:#0f172a;border-radius:10px;padding:10px;text-align:center}
-.box b{font-size:15px}
-.wa{width:100%;background:#16a34a;border:0;color:#fff;padding:14px;border-radius:12px;font-weight:800;font-size:15px}
+.wa{width:100%;background:#16a34a;border:0;color:#fff;padding:14px;border-radius:12px;font-weight:800}
 .qris{text-align:center}
 .qris img{width:170px;background:#fff;padding:8px;border-radius:10px}
 .item{display:flex;justify-content:space-between;background:#0f172a;padding:10px;border-radius:10px;margin-bottom:8px}
-.icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
-.masuk{background:#14532d}
-.keluar{background:#7f1d1d}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);align-items:flex-end;justify-content:center}
 .modal.open{display:flex}
 .sheet{background:#1e293b;width:100%;max-width:480px;border-radius:18px 18px 0 0;padding:16px}
 .sheet input{width:100%;padding:12px;border-radius:10px;border:0;margin:6px 0;background:#0f172a;color:#fff}
-.kat button{background:#334155;color:#fff;border:0;padding:8px 10px;border-radius:20px;margin:3px}
-.kat button.on{background:#16a34a}
-.bayar button{flex:1;padding:11px;border:0;border-radius:10px;background:#334155;color:#fff;font-weight:700}
-.bayar button.on{background:#16a34a}
+.kat button,.bayar button{background:#334155;color:#fff;border:0;padding:8px 10px;border-radius:20px;margin:3px}
+.kat button.on,.bayar button.on{background:#16a34a}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#1e293b;display:flex;justify-content:space-around;padding:10px}
-.nav button{background:none;border:0;color:#fff;font-size:13px}
+.nav button{background:none;border:0;color:#fff}
 .nav b{color:#4ade80;font-size:20px}
 </style>
 </head>
@@ -60,7 +52,9 @@ body{margin:0;font-family:Arial;background:#0f172a;color:#fff;padding:14px;paddi
 <div class="card">
 <h3>📊 Infaq Minggu Ini</h3>
 <div id="chart"></div>
-<div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8"><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span></div>
+<div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8">
+<span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>
+</div>
 </div>
 <div class="card">
 <button class="wa" onclick="kirimWA()">📲 Rekap & Kirim ke WA Grup DKM</button>
@@ -98,11 +92,75 @@ body{margin:0;font-family:Arial;background:#0f172a;color:#fff;padding:14px;paddi
 <button onclick="kirimWA()">📲<br>WA</button>
 </div>
 <script>
-let data=JSON.parse(localStorage.getItem('kas_alikhsan_v2')||'[]');
-let jenisAktif='masuk';
-let bayarAktif='QRIS';
-let katAktif='Infaq Jumat';
-let katMasuk=['Infaq Jumat','Kotak Amal','Donasi','Zakat','Lainnya'];
-let katKeluar=['Listrik','Air / PDAM','Kebersihan','Perbaikan','Lainnya'];
-function rupiah(n){return 'Rp '+n.toLocaleString('id-ID')}
-function pilihBayar(el,v){bayarAktif=v;document.querySelectorAll('#bayarBox button').forEach(b=>
+let data = JSON.parse(localStorage.getItem('kas_alikhsan_v2') || '[]');
+let jenisAktif = 'masuk';
+let bayarAktif = 'QRIS';
+let katAktif = 'Infaq Jumat';
+let katMasuk = ['Infaq Jumat','Kotak Amal','Donasi','Zakat','Lainnya'];
+let katKeluar = ['Listrik','Air / PDAM','Kebersihan','Perbaikan','Lainnya'];
+function rupiah(n){ return 'Rp ' + n.toLocaleString('id-ID'); }
+function pilihBayar(el,v){
+bayarAktif = v;
+document.querySelectorAll('#bayarBox button').forEach(b=>b.classList.remove('on'));
+el.classList.add('on');
+}
+function gantiJenis(j){
+jenisAktif = j;
+document.getElementById('judulForm').innerText = j==='masuk' ? 'Tambah Pemasukan' : 'Tambah Pengeluaran';
+renderKat();
+}
+function renderKat(){
+let list = jenisAktif==='masuk' ? katMasuk : katKeluar;
+katAktif = list[0];
+document.getElementById('catBox').innerHTML = list.map(k=>`<button onclick="pilihKat(this,'${k}')">${k}</button>`).join('');
+document.querySelector('#catBox button').classList.add('on');
+}
+function pilihKat(el,v){
+katAktif = v;
+document.querySelectorAll('#catBox button').forEach(b=>b.classList.remove('on'));
+el.classList.add('on');
+}
+function tampil(){
+let m = 0, k = 0;
+data.forEach(d=>{ if(d.jenis==='masuk') m+=d.nominal; else k+=d.nominal; });
+document.getElementById('
+    'getElementById('totalMasuk').innerText = rupiah(m);
+document.getElementById('totalKeluar').innerText = rupiah(k);
+document.getElementById('saldo').innerText = rupiah(m-k);
+document.getElementById('jml').innerText = data.length + ' transaksi';
+let c = [120000,150000,90000,210000,700000,80000,0];
+let mx = Math.max(...c,1);
+document.getElementById('chart').innerHTML = `<div style="display:flex;align-items:flex-end;gap:8px;height:90px">${c.map(v=>`<div style="flex:1;background:#f97316;border-radius:6px 6px 0 0;height:${Math.max(12,v/mx*80)}px"></div>`).join('')}</div>`;
+let h = '';
+if(!data.length) h = 'Belum ada transaksi';
+data.slice().reverse().forEach((d,i)=>{
+let idx = data.length-1-i;
+let im = d.jenis==='masuk';
+h += `<div class="item"><div><b>${d.nama}</b><br><small>${d.kat} - ${d.bayar}</small></div><div><b>${im?'+':'-'}${rupiah(d.nominal)}</b><br><small onclick="hapus(${idx})" style="color:#f87171">Hapus</small></div></div>`;
+});
+document.getElementById('list').innerHTML = h;
+localStorage.setItem('kas_alikhsan_v2', JSON.stringify(data));
+}
+function bukaForm(j){ gantiJenis(j); document.getElementById('modal').classList.add('open'); }
+function tutupForm(){ document.getElementById('modal').classList.remove('open'); }
+function simpan(){
+let nama = document.getElementById('nama').value || katAktif;
+let nominal = parseInt(document.getElementById('nominal').value);
+if(!nominal){ alert('Isi nominal dulu!'); return; }
+data.push({nama:nama, kat:katAktif, bayar:bayarAktif, jenis:jenisAktif, nominal:nominal});
+document.getElementById('nominal').value = '';
+tutupForm();
+tampil();
+}
+function hapus(i){ if(confirm('Hapus?')){ data.splice(i,1); tampil(); } }
+function kirimWA(){
+let m = 0, k = 0;
+data.forEach(d=>{ if(d.jenis==='masuk') m+=d.nominal; else k+=d.nominal; });
+let t = `*LAPORAN KAS*%0AMasuk: ${rupiah(m)}%0AKeluar: ${rupiah(k)}%0ASaldo: ${rupiah(m-k)}`;
+window.open('https://wa.me/?text=' + t, '_blank');
+}
+renderKat();
+tampil();
+</script>
+</body>
+</html>                    
