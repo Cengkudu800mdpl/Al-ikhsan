@@ -147,3 +147,42 @@ document.getElementById('totalKeluar').innerText=rupiah(keluar);
 document.getElementById('saldo').innerText=rupiah(masuk-keluar);
 document.getElementById('jml').innerText=data.length+' transaksi';
 let chartData = data.length? [0,0,0,0,0,0,0] : [120000,150000,90000,210000,700000,800
+let chartData = data.length? [0,0,0,0,0,0,0] : [120000,150000,90000,210000,700000,80000,0];
+let max = Math.max(...chartData,1);
+document.getElementById('chart').innerHTML=chartData.map((v,i)=>{
+let h = Math.max(12, (v/max)*70);
+let label = v>=1000 ? Math.round(v/1000)+'k' : v;
+return `<div class="bar"><div class="val">${label}</div><div class="fill" style="height:${h}px"></div><div class="day">${hari[i]}</div></div>`
+}).join('');
+let html='';
+data.slice().reverse().forEach((d,i)=>{
+let idx=data.length-1-i;
+let isMasuk=d.jenis==='masuk';
+html+=`<div class="item"><div class="icon ${isMasuk?'':'out'}">${isMasuk?'↓':'↑'}</div><div><b>${d.nama||'Hamba Allah'}</b><small>${d.kat} • ${d.bayar} • ${d.tgl} • Terverifikasi</small><span class="del" onclick="hapus(${idx})">Hapus</span></div><div class="${isMasuk?'plus':'min'}">${isMasuk?'+':'-'} ${rupiah(d.nominal)}</div></div>`;
+});
+document.getElementById('list').innerHTML=html||'<div class="empty">Belum ada transaksi.<br>Klik + Input untuk mulai.</div>';
+localStorage.setItem('kas_alikhsan_v2',JSON.stringify(data));
+}
+function bukaForm(j){gantiJenis(j);document.getElementById('modal').classList.add('show')}
+function tutupForm(){document.getElementById('modal').classList.remove('show')}
+function simpan(){
+let nama=document.getElementById('nama').value||'Hamba Allah';
+let nominal=parseInt(document.getElementById('nominal').value);
+if(!nominal){alert('Isi nominal dulu, Broo!');return}
+data.push({nama:nama,kat:katAktif,bayar:bayarAktif,nominal:nominal,jenis:jenisAktif,tgl:'Hari ini, '+new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})});
+document.getElementById('nominal').value='';
+tutupForm();tampil();
+}
+function hapus(i){if(confirm('Hapus transaksi ini?')){data.splice(i,1);tampil()}}
+function kirimWA(){
+let masuk=0,keluar=0;
+data.forEach(d=>{if(d.jenis==='masuk') masuk+=d.nominal; else keluar+=d.nominal});
+let teks=`*LAPORAN KAS MASJID AL MAKMUR*%0A*DKM AL IKHSAN - CENGKUDU*%0A%0ATotal Masuk: ${rupiah(masuk)}%0ATotal Keluar: ${rupiah(keluar)}%0ASaldo: ${rupiah(masuk-keluar)}%0A%0A*Transaksi Terbaru:*%0A`;
+data.slice().reverse().slice(0,10).forEach(d=>{teks+=`- ${d.nama} | ${d.kat} | ${d.bayar} | ${d.jenis==='masuk'?'+':'-'}${rupiah(d.nominal)}%0A`});
+teks+=`%0ADibuat dari Aplikasi Kas DKM AL IKHSAN`;
+window.open('https://wa.me/?text='+teks,'_blank');
+}
+renderKat();tampil();
+</script>
+</body>
+</html>
