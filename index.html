@@ -14,6 +14,9 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 .top p{font-size:12px;color:#aaa}
 .card{background:#1c1c1c;margin:12px;border-radius:18px;padding:16px}
 .row{display:flex;gap:10px}
+.btn2{flex:1;padding:13px;border:none;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer}
+.btnMasuk{background:#22c55e;color:#fff}
+.btnKeluar{background:#ef4444;color:#fff}
 .stat{flex:1;background:#2a2a2a;border-radius:14px;padding:12px;text-align:center}
 .stat span{font-size:12px;color:#aaa}
 .stat b{display:block;font-size:17px;margin-top:4px}
@@ -43,7 +46,7 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 .modal.show{display:flex}
 .sheet{background:#1c1c1c;width:100%;max-width:480px;border-radius:22px 22px 0 0;padding:20px;padding-bottom:30px}
 .sheet label{font-size:12px;color:#aaa;display:block;margin:12px 0 6px}
-.sheet input,.sheet select{width:100%;padding:13px;border-radius:12px;border:1px solid #333;background:#111;color:#fff;font-size:15px;outline:none}
+.sheet input{width:100%;padding:13px;border-radius:12px;border:1px solid #333;background:#111;color:#fff;font-size:15px;outline:none}
 .radio{display:flex;gap:8px}
 .radio button{flex:1;padding:11px;border-radius:10px;border:1px solid #333;background:#111;color:#fff;cursor:pointer;font-weight:700}
 .radio button.on{background:#ff7a00;border-color:#ff7a00;color:#fff}
@@ -52,6 +55,9 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 .cat{display:flex;gap:8px;flex-wrap:wrap}
 .cat button{padding:9px 12px;border-radius:20px;border:1px solid #333;background:#111;color:#fff;font-size:12px}
 .cat button.on{background:#fff;color:#000;font-weight:700}
+.qrisBox{text-align:center}
+.qrisBox img{width:180px;height:180px;background:#fff;border-radius:14px;padding:10px;margin:12px 0}
+.waBtn{width:100%;padding:14px;border:none;border-radius:12px;background:#25D366;color:#fff;font-weight:800;font-size:15px;margin-top:12px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -61,7 +67,10 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 <div class="saldo" id="saldo">Rp 0</div>
 <p>Saldo Kas Masjid Al Makmur • Cengkudu</p>
 </div>
-
+<div style="margin:0 12px;display:flex;gap:10px">
+<button class="btn2 btnMasuk" onclick="bukaForm('masuk')">+ Pemasukan</button>
+<button class="btn2 btnKeluar" onclick="bukaForm('keluar')">- Pengeluaran</button>
+</div>
 <div class="card">
 <div class="row">
 <div class="stat masuk"><span>Total Masuk</span><b id="totalMasuk">Rp 0</b></div>
@@ -69,23 +78,33 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 </div>
 <div style="margin-top:14px;display:flex;justify-content:space-between"><b>Infaq Minggu Ini</b><span style="color:#aaa;font-size:12px">7 hari terakhir</span></div>
 <div class="chart" id="chart"></div>
+<button class="waBtn" onclick="kirimWA()">📲 Rekap & Kirim ke WA Grup DKM</button>
 </div>
-
+<div class="card qrisBox">
+<b>🕌 QRIS Masjid Al Makmur</b>
+<p style="color:#aaa;font-size:12px;margin-top:4px">Jamaah scan untuk Infaq / Donasi</p>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=DKM-AL-IKHSAN-MASJID-AL-MAKMUR-CENGKUDU" alt="QRIS Masjid">
+<p style="font-size:12px;color:#ffb020">DKM AL IKHSAN • MASJID AL MAKMUR</p>
+<p style="font-size:11px;color:#888;margin-top:4px">* Nanti ganti QR ini dengan QRIS asli masjid ya, Broo</p>
+</div>
 <div class="card">
 <div class="head"><b>Transaksi Terbaru</b><span id="jml">0 transaksi</span></div>
 <div id="list"></div>
 </div>
-
 <div class="nav">
 <button class="active">📊<br>Dashboard</button>
 <button onclick="bukaForm('masuk')">💚<br>Infaq</button>
 <button onclick="bukaForm('masuk')"><span class="big">⊞</span><br>+ Input</button>
-<button>👥<br>Umat</button>
+<button onclick="bukaForm('keluar')">💸<br>Keluar</button>
 </div>
-
 <div class="modal" id="modal">
 <div class="sheet">
 <h3 id="formJudul">Tambah Pemasukan</h3>
+<label>Jenis Transaksi</label>
+<div class="radio" id="jenisBox">
+<button type="button" class="on" id="btnMasuk" onclick="gantiJenis('masuk')">+ Pemasukan</button>
+<button type="button" id="btnKeluar" onclick="gantiJenis('keluar')">- Pengeluaran</button>
+</div>
 <label>Nama / Hamba Allah</label>
 <input type="text" id="nama" value="Hamba Allah" placeholder="Hamba Allah">
 <label>Kategori</label>
@@ -102,16 +121,16 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 <button class="batal" onclick="tutupForm()">Batal</button>
 </div>
 </div>
-
 <script>
 let data = JSON.parse(localStorage.getItem('kas_alikhsan_v2') || '[]');
 let jenisAktif='masuk';
 let bayarAktif='QRIS';
 let katAktif='Infaq Jumat';
 let katMasuk=['Infaq Jumat','Kotak Amal','Donasi','Infaq Harian'];
-let katKeluar=['Listrik','Air / PDAM','Kebersihan','Perbaikan Masjid'];
+let katKeluar=['Listrik','Air / PDAM','Kebersihan','Perbaikan Masjid','Lainnya'];
 function rupiah(n){return 'Rp '+n.toLocaleString('id-ID')}
 function pilihBayar(el,v){bayarAktif=v;document.querySelectorAll('#bayarBox button').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
+function gantiJenis(j){jenisAktif=j;document.getElementById('btnMasuk').classList.toggle('on',j==='masuk');document.getElementById('btnKeluar').classList.toggle('on',j==='keluar');document.getElementById('formJudul').innerText=j==='masuk'?'Tambah Pemasukan':'Tambah Pengeluaran';renderKat();}
 function renderKat(){
 let list = jenisAktif==='masuk'?katMasuk:katKeluar;
 katAktif=list[0];
@@ -121,42 +140,10 @@ document.querySelector('#catBox button').classList.add('on');
 function pilihKat(el,v){katAktif=v;document.querySelectorAll('#catBox button').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
 function tampil(){
 let masuk=0,keluar=0;
-let perHari=[0,0,0,0,0,0,0];
 let hari=['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
 data.forEach(d=>{if(d.jenis==='masuk'){masuk+=d.nominal} else {keluar+=d.nominal}});
 document.getElementById('totalMasuk').innerText=rupiah(masuk);
 document.getElementById('totalKeluar').innerText=rupiah(keluar);
 document.getElementById('saldo').innerText=rupiah(masuk-keluar);
 document.getElementById('jml').innerText=data.length+' transaksi';
-// chart dari data asli, kalau kosong tampil contoh
-let chartData = data.length? perHari : [120000,150000,90000,210000,700000,80000,0];
-let max = Math.max(...chartData,1);
-document.getElementById('chart').innerHTML=chartData.map((v,i)=>{
-let h = Math.max(12, (v/max)*70);
-let label = v>=1000 ? Math.round(v/1000)+'k' : v;
-return `<div class="bar"><div class="val">${label}</div><div class="fill" style="height:${h}px"></div><div class="day">${hari[i]}</div></div>`
-}).join('');
-let html='';
-data.slice().reverse().forEach((d,i)=>{
-let idx=data.length-1-i;
-let isMasuk=d.jenis==='masuk';
-html+=`<div class="item"><div class="icon ${isMasuk?'':'out'}">${isMasuk?'↓':'↑'}</div><div><b>${d.nama||'Hamba Allah'}</b><small>${d.kat} • ${d.bayar} • ${d.tgl} • Terverifikasi</small><span class="del" onclick="hapus(${idx})">Hapus</span></div><div class="${isMasuk?'plus':'min'}">${isMasuk?'+':'-'} ${rupiah(d.nominal)}</div></div>`;
-});
-document.getElementById('list').innerHTML=html||'<div class="empty">Belum ada transaksi.<br>Klik + Input untuk mulai.</div>';
-localStorage.setItem('kas_alikhsan_v2',JSON.stringify(data));
-}
-function bukaForm(j){jenisAktif=j;document.getElementById('formJudul').innerText=j==='masuk'?'Tambah Pemasukan':'Tambah Pengeluaran';renderKat();document.getElementById('modal').classList.add('show')}
-function tutupForm(){document.getElementById('modal').classList.remove('show')}
-function simpan(){
-let nama=document.getElementById('nama').value||'Hamba Allah';
-let nominal=parseInt(document.getElementById('nominal').value);
-if(!nominal){alert('Isi nominal dulu, Broo!');return}
-data.push({nama:nama,kat:katAktif,bayar:bayarAktif,nominal:nominal,jenis:jenisAktif,tgl:'Hari ini, '+new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})});
-document.getElementById('nominal').value='';
-tutupForm();tampil();
-}
-function hapus(i){if(confirm('Hapus transaksi ini?')){data.splice(i,1);tampil()}}
-renderKat();tampil();
-</script>
-</body>
-</html>
+let chartData = data.length? [0,0,0,0,0,0,0] : [120000,150000,90000,210000,700000,800
