@@ -45,4 +45,62 @@ body{background:#f1f5f9;padding-bottom:100px}
 <small>MASJID AL MAKMUR</small>
 <h1>DKM AL IKHSAN</h1>
 <div class="saldo" id="saldo">Rp 0</div>
-<p>Saldo Kas Masjid
+<p>Saldo Kas Masjid Al Makmur • Cengkudu</p>
+</div>
+<div class="card row">
+<div class="stat masuk"><span>Total Masuk</span><b id="totalMasuk">Rp 0</b></div>
+<div class="stat keluar"><span>Total Keluar</span><b id="totalKeluar">Rp 0</b></div>
+</div>
+<div class="btns">
+<button class="btn masuk" onclick="bukaForm('masuk')">+ Pemasukan</button>
+<button class="btn keluar" onclick="bukaForm('keluar')">- Pengeluaran</button>
+</div>
+<div class="form" id="formBox">
+<h3 id="formJudul">Tambah Transaksi</h3>
+<input type="text" id="ket" placeholder="Keterangan, contoh: Infaq Jumat">
+<input type="number" id="nominal" placeholder="Nominal, contoh: 500000">
+<button onclick="simpan()">Simpan</button>
+<button class="batal" onclick="tutupForm()">Batal</button>
+</div>
+<div class="card list">
+<h3>Riwayat Transaksi</h3>
+<div id="list"></div>
+</div>
+<script>
+let data = JSON.parse(localStorage.getItem('kas_alikhsan') || '[]');
+let jenisAktif = 'masuk';
+function rupiah(n){return 'Rp ' + n.toLocaleString('id-ID')}
+function tampil(){
+let masuk=0, keluar=0, html='';
+data.slice().reverse().forEach((d,i)=>{
+let idx = data.length-1-i;
+if(d.jenis==='masuk') masuk+=d.nominal; else keluar+=d.nominal;
+html+=`<div class="item"><div><b>${d.ket}</b><small>${d.tgl}</small></div><div><b class="${d.jenis==='masuk'?'plus':'min'}">${d.jenis==='masuk'?'+':'-'} ${rupiah(d.nominal)}</b><button class="del" onclick="hapus(${idx})">×</button></div></div>`;
+});
+document.getElementById('list').innerHTML = html || '<div class="empty">Belum ada transaksi.<br>Klik + Pemasukan untuk mulai.</div>';
+document.getElementById('totalMasuk').innerText = rupiah(masuk);
+document.getElementById('totalKeluar').innerText = rupiah(keluar);
+document.getElementById('saldo').innerText = rupiah(masuk-keluar);
+localStorage.setItem('kas_alikhsan', JSON.stringify(data));
+}
+function bukaForm(j){
+jenisAktif=j;
+document.getElementById('formBox').style.display='block';
+document.getElementById('formJudul').innerText = j==='masuk' ? 'Tambah Pemasukan' : 'Tambah Pengeluaran';
+document.getElementById('ket').focus();
+window.scrollTo(0,200);
+}
+function tutupForm(){document.getElementById('formBox').style.display='none'}
+function simpan(){
+let ket=document.getElementById('ket').value;
+let nominal=parseInt(document.getElementById('nominal').value);
+if(!ket || !nominal){alert('Isi keterangan dan nominal dulu, Broo!');return}
+data.push({ket:ket, nominal:nominal, jenis:jenisAktif, tgl:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})});
+document.getElementById('ket').value=''; document.getElementById('nominal').value='';
+tutupForm(); tampil();
+}
+function hapus(i){if(confirm('Hapus transaksi ini?')){data.splice(i,1);tampil()}}
+tampil();
+</script>
+</body>
+</html>
